@@ -7,6 +7,7 @@
         body {
             font-family: Arial, Helvetica, sans-serif;
             background-color: skyblue;
+            font-size: x-large;
         }
 
         header {
@@ -21,13 +22,20 @@
             grid-template-columns: auto 1fr;
             gap: 5px;
             border-radius: 10px;
+
         }
 
         input {
             background-color: skyblue;
+            font-size: x-large;
         }
         .lbl {
             font-style: italic;
+        }
+        #clearButton {
+            border-radius: 10px;
+            background-color: darkseagreen;
+            margin: 5px;
         }
         
         /*  remove the arrows from number input...*/
@@ -54,17 +62,25 @@
         <span class="lbl"> Tip: </span><span id="tip">$0.00</span>
         <span class="lbl"> Total: </span><span id="total">$0.00</span>
     </fieldset>
+    <input type="button" value="Clear" id="clearButton">
 
     <script>
+        function clear(){
+            document.getElementById("bill").value = ""
+            document.getElementById("tippct").value = ""
+            calcTip()
+        }
+
         function calcTip() {
             let bill = parseFloat(document.getElementById("bill").value || 0);
             let pct = parseFloat(document.getElementById("tippct").value || 0);
             let tip = Math.round(bill * pct) / 100
-            document.getElementById("tip").innerText = `${tip.toFixed(2)}`;
-            document.getElementById("total").innerText = `${(tip + bill).toFixed(2)}`
+            document.getElementById("tip").innerText = `$${tip.toFixed(2)}`;
+            document.getElementById("total").innerText = `$${(tip + bill).toFixed(2)}`
         }
         document.getElementById("tippct").addEventListener("input", calcTip)
         document.getElementById("bill").addEventListener("input", calcTip)
+        document.getElementById("clearButton").addEventListener("click", clear)
     </script>
 </body>
 
