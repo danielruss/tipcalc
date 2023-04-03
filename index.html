@@ -8,6 +8,8 @@
             font-family: Arial, Helvetica, sans-serif;
             background-color: skyblue;
             font-size: x-large;
+            width: 100vw;
+            overflow: hidden;
         }
 
         header {
@@ -19,19 +21,25 @@
         fieldset {
             background-color: darkseagreen;
             display: grid;
-            grid-template-columns: auto 1fr;
+            grid-template-columns: max-content 1fr;
             gap: 5px;
             border-radius: 10px;
-
+            margin: 10px;
         }
 
         input {
             background-color: skyblue;
             font-size: x-large;
+            padding-top: 0px;
+        }
+        .row-border{
+            border-top: 2px solid gray;
+            grid-column: 1 / span 2;
         }
         .lbl {
             font-style: italic;
         }
+
         #clearButton {
             border-radius: 10px;
             background-color: darkseagreen;
@@ -57,9 +65,10 @@
         Tip Calculator
     </header>
     <fieldset>
-        <label class="lbl" for="bill">Bill Amount: </label><input id="bill" type="number" min=0 step="0.01"">
+        <label class="lbl" for="bill">Bill Amount: </label><input id="bill" type="number" min=0 max=1000 step="0.01"">
         <label class="lbl" for="tippct"> Tip: </label><span><input id="tippct" type="number" min=0 max="100"> %</span>
         <span class="lbl"> Tip: </span><span id="tip">$0.00</span>
+        <span class="row-border"></span>
         <span class="lbl"> Total: </span><span id="total">$0.00</span>
     </fieldset>
     <input type="button" value="Clear" id="clearButton">
