@@ -2,12 +2,11 @@
 <html>
 
 <head>
+    <link rel="manifest" href="manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
-            background-color: skyblue;
-            font-size: x-large;
             width: 100vw;
             height: 100vh;
             overflow: hidden;
@@ -19,34 +18,17 @@
             font-weight: bold;
         }
 
-        fieldset {
-            background-color: darkseagreen;
-            display: grid;
-            grid-template-columns: max-content 1fr;
-            gap: 5px;
-            border-radius: 10px;
-            margin: 10px;
-        }
+ 
 
-        input {
-            background-color: skyblue;
-            font-size: x-large;
-            padding-top: 0px;
-        }
-        .row-border{
-            border-top: 2px solid gray;
-            grid-column: 1 / span 2;
-        }
-        .lbl {
-            font-style: italic;
-        }
+
+
+
 
         #clearButton {
             border-radius: 10px;
-            background-color: darkseagreen;
             margin: 5px;
         }
-        
+
         /*  remove the arrows from number input...*/
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
@@ -57,6 +39,22 @@
         input[type=number] {
             -moz-appearance: textfield;
         }
+
+        .gridform {
+            display: grid;
+            font-size: clamp(1rem, 20vw, 1.5rem);
+            margin: 20px;
+            grid-template-columns: 1fr min-content max-content;
+            gap: 5px;
+            width: 80vw;
+        }
+
+        .gridform input {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: smaller;
+            font-style: italic;
+            padding: 0px 5px;
+        }
     </style>
 </head>
 
@@ -65,33 +63,55 @@
     <header>
         Tip Calculator
     </header>
-    <fieldset>
-        <label class="lbl" for="bill">Bill Amount: </label><input id="bill" size=10 type="number" min=0 max=1000 step="0.01"">
-        <label class="lbl" for="tippct"> Tip: </label><span><input id="tippct" size=5 type="number" min=0 max="100"> %</span>
-        <span class="lbl"> Tip: </span><span id="tip">$0.00</span>
-        <span class="row-border"></span>
-        <span class="lbl"> Total: </span><span id="total">$0.00</span>
-    </fieldset>
-    <input type="button" value="Clear" id="clearButton">
 
-    <script>
-        function clear(){
-            document.getElementById("bill").value = ""
-            document.getElementById("tippct").value = ""
-            calcTip()
-        }
 
-        function calcTip() {
-            let bill = parseFloat(document.getElementById("bill").value || 0);
-            let pct = parseFloat(document.getElementById("tippct").value || 0);
-            let tip = Math.round(bill * pct) / 100
-            document.getElementById("tip").innerText = `$${tip.toFixed(2)}`;
-            document.getElementById("total").innerText = `$${(tip + bill).toFixed(2)}`
-        }
-        document.getElementById("tippct").addEventListener("input", calcTip)
-        document.getElementById("bill").addEventListener("input", calcTip)
-        document.getElementById("clearButton").addEventListener("click", clear)
-    </script>
+    <form class="gridform">
+        <label for="bill">Bill Amount</label>
+        <span>$</span><input id="bill" type="number" min=0 max=1000 step="0.01"">
+        <label for=" pct"> Tip: </label>
+        <span> </span><span><input id="pct" size=5 type="number" step=0.1 min=0 max="100"> %</span>
+        <label for="tip"> Tip amount: </label>
+        <span>$</span><input id="tip" type="number" min=0 max=1000 step="0.01" readonly="readonly">
+        <label for="tax"> Tax: </label>
+        <span>$</span><input id="tax" type="number" min=0 max=1000 step="0.01">
+        <label for="total"> Total: </label>
+        <span>$</span><input id="total" type="number" min=0 max=1000 readonly="readonly">
+    </form>
+        <input type="button" value="Clear" id="clearButton">
+
+            <script>
+            
+                function clear() {
+                    document.querySelectorAll(".gridform input").forEach(e=>e.value="")
+                }
+
+                function calcTip() {
+                    let bill = parseFloat(document.getElementById("bill").value || 0);
+                    let pct = parseFloat(document.getElementById("pct").value || 0);
+                    let tax = parseFloat(document.getElementById("tax").value || 0);
+                    let tip = Math.round(bill * pct) / 100
+                    document.getElementById("tip").value = `${tip.toFixed(2)}`;
+                    document.getElementById("total").value = `${(tip + bill+ tax).toFixed(2)}`
+                }
+
+
+                function allNDigits(event,n){
+                    let re=new RegExp(`\\.\\d{${n}}`)
+                    if (re.test(event.target.value)){
+                        if (event.key!="Backspace"){
+                            event.preventDefault()
+                        }
+                    }
+                }
+
+                document.getElementById("bill").addEventListener("keydown",(event)=> allNDigits(event,2))
+                document.getElementById("tax").addEventListener("keydown",(event)=> allNDigits(event,2))
+                document.getElementById("pct").addEventListener("keydown",(event)=> allNDigits(event,1))
+                document.getElementById("clearButton").addEventListener("click",clear)
+                document.getElementById("bill").addEventListener("keyup",calcTip)
+                document.getElementById("pct").addEventListener("keyup",calcTip)
+                document.getElementById("tax").addEventListener("keyup",calcTip)
+            </script>
 </body>
 
 </html>

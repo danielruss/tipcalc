@@ -1,0 +1,12 @@
+{
+    "name":"Tip Calculator",
+    "display":"standalone",
+    "start_url":".",
+    "icons": [
+        {
+            "src":"icons/icon1.png",
+            "type":"image/png",
+            "sizes":"512x512"
+        }
+    ]
+}
